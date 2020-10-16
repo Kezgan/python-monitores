@@ -4,9 +4,11 @@ import logging
 
 logging.basicConfig(format='%(asctime)s.%(msecs)03d [%(threadName)s] - %(message)s', datefmt='%H:%M:%S', level=logging.INFO)
 
+cantConsumidores = 3
+
 def productor(monitor):
     print("Voy a producir")
-    for i in range(5):
+    for i in range(30):
         with monitor:          # hace el acquire y al final un release
             items.append(i)    # agrega un ítem
             monitor.notify()   # Notifica que ya se puede hacer acquire
@@ -37,8 +39,13 @@ items = []
 items_monit = threading.Condition()
 
 # un thread que consume
-cons1 = Consumidor(items_monit)
-cons1.start()
+listaConsumidores = []
+for c in range(cantConsumidores):
+    listaConsumidores.append(c)
+
+for c in listaConsumidores:
+    cons1 = Consumidor(items_monit)
+    cons1.start()
 
 # El productor
 productor(items_monit)
