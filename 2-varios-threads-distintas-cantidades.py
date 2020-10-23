@@ -5,7 +5,7 @@ import random
 
 logging.basicConfig(format='%(asctime)s.%(msecs)03d [%(threadName)s] - %(message)s', datefmt='%H:%M:%S', level=logging.INFO)
 
-cantConsumidores = 3
+cantConsumidores = 5
 
 def productor(monitor):
     print("Voy a producir")
@@ -28,7 +28,7 @@ class Consumidor(threading.Thread):
             with self.monitor:          # Hace el acquire y al final un release    
                 while len(items)<self.cantConsumir:
                     self.monitor.wait()  # espera la señal, es decir el notify
-                for i in range(self.cantConsumir):
+                for _ in range(self.cantConsumir):
                     x = items.pop(0)     # saca (consume) el primer ítem
                     logging.info(f'Consumí {x}')
 
@@ -48,7 +48,7 @@ for c in range(cantConsumidores):
 
 # cantidad de consumidores
 for c in listaConsumidores:
-    cantConsumir = random.randrange(2,6,1)
+    cantConsumir = random.randint(1, 6)
     cons1 = Consumidor(items_monit, cantConsumir)
     cons1.start()
 
